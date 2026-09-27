@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from sqlalchemy.exc import IntegrityError
 from app.database import sesson_local
 from app.model import User
-from app.schema import userCreate
+from app.schema import userCreate, userUpdate
 
 
 app = FastAPI()
@@ -69,3 +69,42 @@ def getExact(userid : int):
         )
     
     return user
+
+
+@app.put("/users/{userid}")
+def update_user(userid : int, user_data : userUpdate):
+
+    db = sesson_local()
+
+    user = db.query(User).filter(User.id  == userid).first()
+
+    if not user:
+        db.close()
+        raise HTTPException(status_code=404, detail="User Not Found !")
+
+    user.name = user_data.name
+    user.email = user_data.email
+
+    db.commit()
+    db.refresh(user)
+    db.close()
+
+    return user
+
+
+@app.delete("/users/{userid}")
+def delete_user(userid : int):
+
+    db = sesson_local()
+
+    user = db.query(User).filter( User.id == userid).first()
+
+    if not user:
+        db.close()
+        raise HTTPException(status_code=404, detail="User not found !")
+
+    db.delete(user)
+    db.commit()
+    db.close()
+
+    return {f"User {user.name} is succssfully deleted !"}
