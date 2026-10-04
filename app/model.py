@@ -10,7 +10,7 @@ class Student(Base):
         primary_key= True
     )
 
-    enrollment_nO : Mapped[str] = mapped_column(
+    enrollment_no : Mapped[str] = mapped_column(
         String(150),
         unique=True,
         nullable=False,
@@ -18,23 +18,23 @@ class Student(Base):
     )
 
     name : Mapped[str] = mapped_column(
-        String(20),
+        String(100),
         nullable=False
     )
 
     phone : Mapped[str | None] = mapped_column(
-        String(10),
+        String(100),
         nullable=True
     )
 
     email : Mapped[str] = mapped_column(
-        String(20),
+        String(100),
         nullable=False,
         unique=True
     )
 
     department : Mapped[str] = mapped_column(
-        String(20),
+        String(50),
         nullable=False
     )
 
