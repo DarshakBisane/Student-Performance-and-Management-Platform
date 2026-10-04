@@ -3,6 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from app.database import sesson_local
 from app.model import User
 from app.schema import userCreate, userUpdate
+from app.routes.users import router as user_router
 
 
 app = FastAPI()
@@ -33,24 +34,13 @@ def create_user(userdata : userCreate):
 
     return user
 
-@app.get("/users")
-def getData():
+#imported the router from "router/users.py" file. imoprted get method
+app.include_router(user_router)
 
-    db = sesson_local()
-
-    user = db.query(User).all()
-
-    id1 = db.query(User.name).filter(
-        User.id == 1
-    ).scalar()
 
     # .all()     # list of results
     # .first()   # first result/row
     # .scalar()  # actual single value
-
-    db.close()
-
-    return user,id1
 
 @app.get("/users/{userid}")
 def getExact(userid : int):
